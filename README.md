@@ -2,7 +2,36 @@
 
 Pipeline ETL (Extract, Transform, Load) para el análisis de datos de ingresos de la Región de Los Ríos, Chile. Construido con principios de Arquitectura Limpia, patrones de diseño SOLID y visualizaciones profesionales interactivas.
 
-## 🏗️ Arquitectura
+## � Visualizaciones HTML (nuevo)
+
+Este repositorio incluye un sitio estático en `docs/` que embebe las visualizaciones exportadas a HTML y se adapta a móviles (incluido iPhone 14 Pro Max).
+
+• Compilar visualizaciones a HTML:
+
+```bash
+# usando la venv del repo (recomendado)
+.venv/bin/python compile_visualizations.py
+
+# o con python del sistema
+python3 compile_visualizations.py
+```
+
+Esto generará/actualizará archivos en `outputs/` y los copiará automáticamente a `docs/outputs/` para que el sitio los muestre.
+
+• Ver el sitio localmente: abre `docs/index.html` en tu navegador.
+
+• Archivos HTML principales:
+  - `01_evolucion_ingresos.html`
+  - `02_brecha_salarial.html`
+  - `03_comparacion_genero.html` (excluye años 2024 y 2026; sin anotación de "Brecha actual")
+  - `04_comparacion_anos_clave.html`
+
+• Notas:
+  - Las gráficas son responsive (Plotly autosize + config responsive) y los iframes ocupan el 100% del ancho del contenedor.
+  - En móviles se ajustan fuentes, paddings y alturas mínimas para mejorar la lectura.
+  - Puedes cambiar el título/subtítulo del sitio en `docs/index.html`.
+
+## �🏗️ Arquitectura
 
 Este proyecto sigue los principios de **Arquitectura Limpia** con clara separación de responsabilidades:
 

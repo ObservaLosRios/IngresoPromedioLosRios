@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import warnings
+from shutil import copy2
 
 # Configuración
 warnings.filterwarnings('ignore')
@@ -107,8 +108,8 @@ class EconomistStyle:
         return dict(
             paper_bgcolor=cls.COLORS['paper'],
             plot_bgcolor=cls.COLORS['background'],
-            width=width,
-            height=height,
+            # No establecer width/height fijos para permitir que Plotly se ajuste al contenedor
+            autosize=True,
             margin=dict(l=120, r=80, t=130, b=80),
             title=dict(
                 text=cls._create_styled_title(title, subtitle),
@@ -284,7 +285,7 @@ def create_income_trend_chart(df):
 
 print("📈 Generando Visualización 1: Evolución de Ingresos...")
 trend_fig = create_income_trend_chart(df)
-trend_fig.write_html("outputs/01_evolucion_ingresos.html")
+trend_fig.write_html("outputs/01_evolucion_ingresos.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
 print("✅ Guardado: outputs/01_evolucion_ingresos.html")
 
 # Visualización 2: Análisis de brecha salarial
@@ -371,14 +372,15 @@ def create_gender_gap_chart(df):
 
 print("⚖️ Generando Visualización 2: Brecha Salarial...")
 gap_fig, gap_data = create_gender_gap_chart(df)
-gap_fig.write_html("outputs/02_brecha_salarial.html")
+gap_fig.write_html("outputs/02_brecha_salarial.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
 print("✅ Guardado: outputs/02_brecha_salarial.html")
 
 # Visualización 3: Comparación por género
 def create_comparative_chart(df):
     """Crea gráfico comparativo de ingresos por género"""
     
-    gender_data = df[df['Sexo'].isin(['Hombres', 'Mujeres'])]
+    # Excluir años 2024 y 2026 y mantener solo Hombres/Mujeres
+    gender_data = df[(df['Sexo'].isin(['Hombres', 'Mujeres'])) & (~df['Año'].isin([2024, 2026]))]
     fig = go.Figure()
     
     gender_colors = {
@@ -413,7 +415,7 @@ def create_comparative_chart(df):
     
     layout = economist.get_base_layout(
         title="Evolución Comparativa por Género",
-        subtitle="Ingresos promedio: hombres vs mujeres (2010-2022)",
+        subtitle="Ingresos promedio: hombres vs mujeres (sin 2024 y 2026)",
         width=900,
         height=550
     )
@@ -447,32 +449,6 @@ def create_comparative_chart(df):
     
     fig.update_layout(layout)
     
-    # Calcular brecha actual
-    latest_year = gender_data['Año'].max()
-    latest_data = gender_data[gender_data['Año'] == latest_year]
-    male_income = latest_data[latest_data['Sexo'] == 'Hombres']['Value'].iloc[0]
-    female_income = latest_data[latest_data['Sexo'] == 'Mujeres']['Value'].iloc[0]
-    gap_amount = male_income - female_income
-    
-    fig.add_annotation(
-        text=f"Brecha actual: ${gap_amount:,.0f}",
-        x=latest_year,
-        y=(male_income + female_income) / 2,
-        xanchor="left",
-        yanchor="middle",
-        font=dict(size=12, color=economist.COLORS['text'], weight='bold'),
-        bgcolor='rgba(255,255,255,0.9)',
-        bordercolor=economist.COLORS['primary'],
-        borderwidth=1,
-        borderpad=4,
-        arrowhead=2,
-        arrowsize=1,
-        arrowwidth=2,
-        arrowcolor=economist.COLORS['primary'],
-        ax=20,
-        ay=0
-    )
-    
     fig.add_annotation(
         text="Fuente: Instituto Nacional de Estadísticas (INE) | Análisis: ETL Pipeline",
         x=0.15, y=-0.12,
@@ -486,7 +462,7 @@ def create_comparative_chart(df):
 
 print("👥 Generando Visualización 3: Comparación por Género...")
 comp_fig, comp_data = create_comparative_chart(df)
-comp_fig.write_html("outputs/03_comparacion_genero.html")
+comp_fig.write_html("outputs/03_comparacion_genero.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
 print("✅ Guardado: outputs/03_comparacion_genero.html")
 
 # Visualización 4: Comparación de años clave
@@ -584,7 +560,7 @@ def create_comprehensive_comparison(df):
 
 print("📊 Generando Visualización 4: Comparación de Años Clave...")
 comp_comparison_fig, full_table = create_comprehensive_comparison(df)
-comp_comparison_fig.write_html("outputs/04_comparacion_anos_clave.html")
+comp_comparison_fig.write_html("outputs/04_comparacion_anos_clave.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
 print("✅ Guardado: outputs/04_comparacion_anos_clave.html")
 
 # Generar resumen final
@@ -662,3 +638,22 @@ print("📂 Archivos guardados en la carpeta outputs/")
 print("🌐 Abre los archivos .html en tu navegador para ver las gráficas")
 print()
 print("¡Análisis completado! 🎉")
+
+# Copiar archivos generados a docs/outputs para la web estática
+try:
+    target_dir = Path("docs/outputs")
+    target_dir.mkdir(parents=True, exist_ok=True)
+    files = [
+        "01_evolucion_ingresos.html",
+        "02_brecha_salarial.html",
+        "03_comparacion_genero.html",
+        "04_comparacion_anos_clave.html",
+    ]
+    for f in files:
+        src = Path("outputs") / f
+        dst = target_dir / f
+        if src.exists():
+            copy2(src, dst)
+    print("📤 Archivos copiados a docs/outputs para su visualización en la web")
+except Exception as e:
+    print(f"⚠️  No se pudieron copiar archivos a docs/outputs: {e}")
