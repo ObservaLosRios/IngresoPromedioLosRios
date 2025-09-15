@@ -1,4 +1,28 @@
-# Byte-compiled / optimized / DLL files
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# Virtual env
+.venv/
+venv/
+
+# Logs
+logs/
+
+# Local outputs (public assets viven en docs/outputs)
+outputs/
+
+# IDE/editor
+.vscode/
+.idea/
+*.code-workspace# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
