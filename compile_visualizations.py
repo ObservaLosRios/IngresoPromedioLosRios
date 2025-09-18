@@ -26,7 +26,7 @@ print()
 print("📊 Cargando datos...")
 data_paths = [
     "data/raw/IngresoPromedio.csv",
-    "outputs/income_data_processed.csv", 
+    "docs/outputs/income_data_processed.csv",  # Nueva ubicación consolidada
     "IngresoPromedio.csv"
 ]
 
@@ -285,8 +285,11 @@ def create_income_trend_chart(df):
 
 print("📈 Generando Visualización 1: Evolución de Ingresos...")
 trend_fig = create_income_trend_chart(df)
-trend_fig.write_html("outputs/01_evolucion_ingresos.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
-print("✅ Guardado: outputs/01_evolucion_ingresos.html")
+target_dir = Path("docs/outputs")
+target_dir.mkdir(parents=True, exist_ok=True)
+
+trend_fig.write_html("docs/outputs/01_evolucion_ingresos.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
+print("✅ Guardado: docs/outputs/01_evolucion_ingresos.html")
 
 # Visualización 2: Análisis de brecha salarial
 def create_gender_gap_chart(df):
@@ -372,8 +375,8 @@ def create_gender_gap_chart(df):
 
 print("⚖️ Generando Visualización 2: Brecha Salarial...")
 gap_fig, gap_data = create_gender_gap_chart(df)
-gap_fig.write_html("outputs/02_brecha_salarial.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
-print("✅ Guardado: outputs/02_brecha_salarial.html")
+gap_fig.write_html("docs/outputs/02_brecha_salarial.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
+print("✅ Guardado: docs/outputs/02_brecha_salarial.html")
 
 # Visualización 3: Comparación por género
 def create_comparative_chart(df):
@@ -462,8 +465,8 @@ def create_comparative_chart(df):
 
 print("👥 Generando Visualización 3: Comparación por Género...")
 comp_fig, comp_data = create_comparative_chart(df)
-comp_fig.write_html("outputs/03_comparacion_genero.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
-print("✅ Guardado: outputs/03_comparacion_genero.html")
+comp_fig.write_html("docs/outputs/03_comparacion_genero.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
+print("✅ Guardado: docs/outputs/03_comparacion_genero.html")
 
 # Visualización 4: Comparación de años clave
 def create_comprehensive_comparison(df):
@@ -560,8 +563,8 @@ def create_comprehensive_comparison(df):
 
 print("📊 Generando Visualización 4: Comparación de Años Clave...")
 comp_comparison_fig, full_table = create_comprehensive_comparison(df)
-comp_comparison_fig.write_html("outputs/04_comparacion_anos_clave.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
-print("✅ Guardado: outputs/04_comparacion_anos_clave.html")
+comp_comparison_fig.write_html("docs/outputs/04_comparacion_anos_clave.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
+print("✅ Guardado: docs/outputs/04_comparacion_anos_clave.html")
 
 # Generar resumen final
 def generate_final_summary(df):
@@ -620,10 +623,10 @@ def generate_final_summary(df):
     print("   ✅ Análisis interactivo con Plotly finalizado")
     print()
     print("📁 Archivos HTML generados en:")
-    print("   • outputs/01_evolucion_ingresos.html")
-    print("   • outputs/02_brecha_salarial.html")
-    print("   • outputs/03_comparacion_genero.html")
-    print("   • outputs/04_comparacion_anos_clave.html")
+    print("   • docs/outputs/01_evolucion_ingresos.html")
+    print("   • docs/outputs/02_brecha_salarial.html")
+    print("   • docs/outputs/03_comparacion_genero.html")
+    print("   • docs/outputs/04_comparacion_anos_clave.html")
     print()
     print("🌐 Para visualizar, abre cualquier archivo HTML en tu navegador")
 
@@ -634,26 +637,10 @@ print("🚀 COMPILACIÓN COMPLETADA EXITOSAMENTE")
 print("="*60)
 print()
 print("✅ Todas las visualizaciones han sido generadas")
-print("📂 Archivos guardados en la carpeta outputs/")
+print("📂 Archivos guardados en la carpeta docs/outputs/")
 print("🌐 Abre los archivos .html en tu navegador para ver las gráficas")
 print()
 print("¡Análisis completado! 🎉")
 
-# Copiar archivos generados a docs/outputs para la web estática
-try:
-    target_dir = Path("docs/outputs")
-    target_dir.mkdir(parents=True, exist_ok=True)
-    files = [
-        "01_evolucion_ingresos.html",
-        "02_brecha_salarial.html",
-        "03_comparacion_genero.html",
-        "04_comparacion_anos_clave.html",
-    ]
-    for f in files:
-        src = Path("outputs") / f
-        dst = target_dir / f
-        if src.exists():
-            copy2(src, dst)
-    print("📤 Archivos copiados a docs/outputs para su visualización en la web")
-except Exception as e:
-    print(f"⚠️  No se pudieron copiar archivos a docs/outputs: {e}")
+# Ya no es necesario copiar archivos: se generan directamente en docs/outputs
+print("📤 Archivos generados directamente en docs/outputs (sin carpeta outputs intermedia)")

@@ -209,19 +209,19 @@ class LoadDataUseCase:
         
         # Generate exports
         if 'csv' in output_formats:
-            csv_path = "outputs/income_data_processed.csv"
+            csv_path = "docs/outputs/income_data_processed.csv"
             if self._export_repository.export_to_csv(records, csv_path):
                 generated_files['csv'] = csv_path
                 logger.info(f"CSV export saved: {csv_path}")
         
         if 'excel' in output_formats:
-            excel_path = "outputs/income_data_processed.xlsx"
+            excel_path = "docs/outputs/income_data_processed.xlsx"
             if self._export_repository.export_to_excel(records, excel_path):
                 generated_files['excel'] = excel_path
                 logger.info(f"Excel export saved: {excel_path}")
         
         # Export analysis results
-        analysis_path = "outputs/analysis_results.json"
+        analysis_path = "docs/outputs/analysis_results.json"
         if self._export_repository.export_analysis_results(analysis_results, analysis_path):
             generated_files['analysis'] = analysis_path
             logger.info(f"Analysis results saved: {analysis_path}")

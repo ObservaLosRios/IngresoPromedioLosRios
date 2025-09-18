@@ -16,7 +16,7 @@ Este repositorio incluye un sitio estático en `docs/` que embebe las visualizac
 python3 compile_visualizations.py
 ```
 
-Esto generará/actualizará archivos en `outputs/` y los copiará automáticamente a `docs/outputs/` para que el sitio los muestre.
+Esto generará/actualizará directamente los archivos en `docs/outputs/` (se eliminó la carpeta raíz `outputs/` para una estructura más limpia orientada a despliegue web).
 
 • Ver el sitio localmente: abre `docs/index.html` en tu navegador.
 
@@ -118,7 +118,7 @@ python src/main.py --help
 
 ## 📈 Ejemplos de Salida
 
-El pipeline genera varias salidas en el directorio `outputs/`:
+El pipeline genera varias salidas ahora directamente en `docs/outputs/` (unificamos ubicación para facilitar GitHub Pages):
 
 ### Gráficos Profesionales
 - `income_trend_chart.png` - Evolución de ingresos a lo largo del tiempo
@@ -233,7 +233,7 @@ IngresoPromedioLosRios/
 ├── data/                     # Directorios de datos
 │   ├── raw/                 # Datos originales
 │   └── processed/           # Datos procesados
-├── outputs/                  # Salidas generadas
+├── docs/outputs/             # Salidas generadas (HTML, CSV, Excel, JSON)
 ├── tests/                   # Suite de pruebas
 ├── notebooks/               # Notebooks de análisis interactivo
 └── logs/                    # Logs de la aplicación
