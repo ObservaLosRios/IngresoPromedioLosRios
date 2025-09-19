@@ -542,3 +542,4 @@ Este proyecto está bajo la **Licencia MIT** - ver [LICENSE](LICENSE) para detal
   <h3>⭐ Si este proyecto te es útil, ¡considera darle una estrella! ⭐</h3>
   <p><em>Hecho con ❤️ para promover la transparencia y equidad salarial en Chile</em></p>
 </div>
+# Acceso limpio a carpeta docs - Fri Sep 19 18:37:39 -03 2025
