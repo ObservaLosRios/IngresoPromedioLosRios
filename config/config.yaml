@@ -1,6 +1,6 @@
 data_sources:
   raw_csv:
-    path: "IngresoPromedio.csv"
+    path: "data/raw/IngresoPromedio.csv"
     encoding: "utf-8"
     delimiter: ","
   

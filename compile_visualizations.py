@@ -25,9 +25,7 @@ print()
 # Load and Prepare Data
 print("📊 Cargando datos...")
 data_paths = [
-    "data/raw/IngresoPromedio.csv",
-    "docs/outputs/income_data_processed.csv",  # Nueva ubicación consolidada
-    "IngresoPromedio.csv"
+    "data/raw/IngresoPromedio.csv"
 ]
 
 df = None
@@ -41,7 +39,7 @@ for path in data_paths:
         continue
 
 if df is None:
-    print("⚠️  Creando datos de ejemplo para demostración")
+    print("⚠️  No se encontró data/raw/IngresoPromedio.csv. Creando datos de ejemplo para demostración")
     years = list(range(2010, 2023))
     data = []
     
@@ -283,13 +281,8 @@ def create_income_trend_chart(df):
     
     return fig
 
-print("📈 Generando Visualización 1: Evolución de Ingresos...")
+print("📈 Preparando figura 1 (uso inline) ...")
 trend_fig = create_income_trend_chart(df)
-target_dir = Path("docs/outputs")
-target_dir.mkdir(parents=True, exist_ok=True)
-
-trend_fig.write_html("docs/outputs/01_evolucion_ingresos.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
-print("✅ Guardado: docs/outputs/01_evolucion_ingresos.html")
 
 # Visualización 2: Análisis de brecha salarial
 def create_gender_gap_chart(df):
@@ -373,10 +366,8 @@ def create_gender_gap_chart(df):
     
     return fig, pivot_df
 
-print("⚖️ Generando Visualización 2: Brecha Salarial...")
+print("⚖️ Preparando figura 2 (uso inline) ...")
 gap_fig, gap_data = create_gender_gap_chart(df)
-gap_fig.write_html("docs/outputs/02_brecha_salarial.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
-print("✅ Guardado: docs/outputs/02_brecha_salarial.html")
 
 # Visualización 3: Comparación por género
 def create_comparative_chart(df):
@@ -463,10 +454,8 @@ def create_comparative_chart(df):
     
     return fig, gender_data
 
-print("👥 Generando Visualización 3: Comparación por Género...")
+print("👥 Preparando figura 3 (uso inline) ...")
 comp_fig, comp_data = create_comparative_chart(df)
-comp_fig.write_html("docs/outputs/03_comparacion_genero.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
-print("✅ Guardado: docs/outputs/03_comparacion_genero.html")
 
 # Visualización 4: Comparación de años clave
 def create_comprehensive_comparison(df):
@@ -561,10 +550,8 @@ def create_comprehensive_comparison(df):
     
     return fig, comparison_table
 
-print("📊 Generando Visualización 4: Comparación de Años Clave...")
+print("📊 Preparando figura 4 (uso inline) ...")
 comp_comparison_fig, full_table = create_comprehensive_comparison(df)
-comp_comparison_fig.write_html("docs/outputs/04_comparacion_anos_clave.html", include_plotlyjs="cdn", full_html=True, config={"responsive": True})
-print("✅ Guardado: docs/outputs/04_comparacion_anos_clave.html")
 
 # Generar resumen final
 def generate_final_summary(df):
@@ -622,13 +609,7 @@ def generate_final_summary(df):
     print("   ✅ Visualizaciones The Economist generadas")
     print("   ✅ Análisis interactivo con Plotly finalizado")
     print()
-    print("📁 Archivos HTML generados en:")
-    print("   • docs/outputs/01_evolucion_ingresos.html")
-    print("   • docs/outputs/02_brecha_salarial.html")
-    print("   • docs/outputs/03_comparacion_genero.html")
-    print("   • docs/outputs/04_comparacion_anos_clave.html")
-    print()
-    print("🌐 Para visualizar, abre cualquier archivo HTML en tu navegador")
+    print("🌐 Visualización: ahora se realiza inline en docs/index.html (sin HTMLs intermedios)")
 
 generate_final_summary(df)
 
@@ -636,11 +617,10 @@ print("\n" + "="*60)
 print("🚀 COMPILACIÓN COMPLETADA EXITOSAMENTE")
 print("="*60)
 print()
-print("✅ Todas las visualizaciones han sido generadas")
-print("📂 Archivos guardados en la carpeta docs/outputs/")
-print("🌐 Abre los archivos .html en tu navegador para ver las gráficas")
+print("✅ Figuras preparadas en memoria / objetos Plotly listos")
+print("✅ Modo inline activo (sin archivos HTML exportados)")
+print("🌐 Abre docs/index.html para ver las gráficas")
 print()
 print("¡Análisis completado! 🎉")
 
-# Ya no es necesario copiar archivos: se generan directamente en docs/outputs
-print("📤 Archivos generados directamente en docs/outputs (sin carpeta outputs intermedia)")
+print("📤 Sin copia de archivos: render manejado por el front inline")

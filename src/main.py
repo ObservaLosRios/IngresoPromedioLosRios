@@ -158,12 +158,12 @@ def create_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="ETL Pipeline para Análisis de Ingresos - Región de Los Ríos",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
+    epilog="""
 Ejemplos de uso:
-  python main.py IngresoPromedio.csv
+  python main.py data/raw/IngresoPromedio.csv
   python main.py data/raw/IngresoPromedio.csv --output csv excel
-  python main.py IngresoPromedio.csv --output charts --verbose
-        """
+  python main.py data/raw/IngresoPromedio.csv --output charts --verbose
+    """
     )
     
     parser.add_argument(

@@ -16,9 +16,8 @@ venv/
 # Logs
 logs/
 
-# Local outputs (solo en la raíz). Mantener docs/outputs versionado
+# Local outputs (solo en la raíz)
 /outputs/
-!docs/outputs/
 
 # IDE/editor
 .vscode/
