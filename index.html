@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirigiendo a Dashboard...</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        h1 { margin-bottom: 1rem; }
+        p { margin-bottom: 1rem; opacity: 0.9; }
+        .redirect-link {
+            color: #fff;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        // Redirección automática
+        setTimeout(function() {
+            window.location.href = './docs/index.html';
+        }, 2000);
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="spinner"></div>
+        <h1>Dashboard de Ingresos Promedio Los Ríos</h1>
+        <p>Redirigiendo al dashboard...</p>
+        <p>Si no se redirige automáticamente, <a href="./docs/index.html" class="redirect-link">haga clic aquí</a></p>
+    </div>
+</body>
+</html>
