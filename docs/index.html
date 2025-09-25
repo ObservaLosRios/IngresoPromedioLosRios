@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ingreso Promedio - Región de Los Ríos</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <header class="main-header">
+        <div class="logos-container">
+            <img src="thumbnail_logo_observa.png" class="header-logo-left" alt="Observa" />
+            <img src="thumbnail_images.png" class="header-logo" alt="Región" />
+        </div>
+        <div class="header-content">
+            <h1 class="main-title">Ingreso Promedio - Región de Los Ríos</h1>
+            <p class="subtitle">Evolución, brecha salarial y comparación por género (2010–2022)</p>
+        </div>
+    </header>
+
+    <nav class="nav-container">
+        <div class="nav-links" id="nav-links">
+            <span class="nav-link active" data-section="evolucion">Evolución de Ingresos</span>
+            <span class="nav-link" data-section="brecha">Brecha Salarial</span>
+            <span class="nav-link" data-section="comparacion">Comparación por Género</span>
+            <span class="nav-link" data-section="anos">Años Clave</span>
+        </div>
+    </nav>
+
+    <div class="container">
+            <section id="evolucion" class="section active">
+                <h2 class="section-title">Evolución del Ingreso Promedio</h2>
+                <div class="chart-section"><div id="chart-evolucion"></div></div>
+            </section>
+
+            <section id="brecha" class="section">
+                <h2 class="section-title">Brecha Salarial de Género</h2>
+                <div class="chart-section"><div id="chart-brecha"></div></div>
+            </section>
+
+            <section id="comparacion" class="section">
+                <h2 class="section-title">Comparación por Género</h2>
+                <div class="chart-section"><div id="chart-comparacion"></div></div>
+            </section>
+
+            <section id="anos" class="section">
+                <h2 class="section-title">Comparación de Años Clave</h2>
+                <div class="chart-section"><div id="chart-anos"></div></div>
+            </section>
+    </div>
+
+    <footer class="footer">
+        <p class="footer-text">Universidad Austral de Chile – Centro de Estudios Regionales</p>
+        <img src="thumbnail_logo cer.png" class="footer-logo" alt="CER" />
+    </footer>
+
+        <div class="tooltip" id="tooltip"></div>
+        <script src="interactive.js"></script>
+        <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+        <script>
+            const RAW_DATA = [
+                {year:2010, hombres:302643.5, mujeres:223028.8, ambos:272657.5},
+                {year:2011, hombres:311489.9, mujeres:226802.8, ambos:278847.4},
+                {year:2012, hombres:378842.8, mujeres:262627.9, ambos:334648},
+                {year:2013, hombres:383426.8, mujeres:294324.4, ambos:348296.2},
+                {year:2014, hombres:390653.25, mujeres:321006.7, ambos:368192.6},
+                {year:2015, hombres:438290.7, mujeres:346236.1, ambos:399669.5},
+                {year:2016, hombres:475333.4, mujeres:362503.2, ambos:428375.3},
+                {year:2017, hombres:514347.1, mujeres:420940.7, ambos:476302.6},
+                {year:2018, hombres:528013.6, mujeres:452441.3, ambos:496771.5},
+                {year:2019, hombres:577726.1, mujeres:425067.7, ambos:516263.7},
+                {year:2022, hombres:765129.9, mujeres:564380.9, ambos:679991.9}
+            ];
+            const YEARS = RAW_DATA.map(r=>r.year);
+            const HOMBRES = RAW_DATA.map(r=>r.hombres);
+            const MUJERES = RAW_DATA.map(r=>r.mujeres);
+            const AMBOS = RAW_DATA.map(r=>r.ambos);
+
+            function economistLayout(title, subtitle='') {
+                const isMobile = window.innerWidth <= 768;
+                const isSmallMobile = window.innerWidth <= 480;
+                
+                return {
+                    title:{
+                        text:`<b>${title}</b><br><span style='font-size:${isSmallMobile ? '10px' : isMobile ? '11px' : '12px'};color:#7F8C8D'>${subtitle}</span>`,
+                        x:0,
+                        xanchor:'left',
+                        font:{
+                            family:'Times New Roman, Georgia, serif',
+                            size: isSmallMobile ? 16 : isMobile ? 18 : 22,
+                            color:'#2C3E50'
+                        }
+                    },
+                    paper_bgcolor:'#FFFFFF', 
+                    plot_bgcolor:'#FFFFFF',
+                    margin:{
+                        l: isSmallMobile ? 50 : isMobile ? 60 : 90,
+                        r: isSmallMobile ? 20 : isMobile ? 30 : 40,
+                        t: isSmallMobile ? 80 : isMobile ? 90 : 110,
+                        b: isSmallMobile ? 50 : isMobile ? 60 : 70
+                    },
+                    font:{family:'Arial, sans-serif', color:'#2C3E50', size: isSmallMobile ? 10 : isMobile ? 11 : 12},
+                    legend:{
+                        orientation:'h', 
+                        y: isSmallMobile ? 1.12 : 1.08, 
+                        x:0, 
+                        xanchor:'left', 
+                        font:{size: isSmallMobile ? 10 : isMobile ? 11 : 12}
+                    },
+                    hovermode:'x unified',
+                    autosize: true,
+                    width: null,
+                    height: null
+                };
+            }
+
+            function renderEvolucion(){
+                const isMobile = window.innerWidth <= 768;
+                const traces=[
+                    {x:YEARS,y:AMBOS,name:'Ambos sexos',mode:'lines+markers',line:{color:'#FFD700',width: isMobile ? 3 : 4},marker:{size: isMobile ? 5 : 7,symbol:'square',line:{color:'#fff',width:1}},hovertemplate:'<b>Ambos sexos</b><br>Año:%{x}<br>Ingreso:$%{y:,}<extra></extra>'},
+                    {x:YEARS,y:HOMBRES,name:'Hombres',mode:'lines+markers',line:{color:'#003B5C',width: isMobile ? 2.5 : 3},marker:{size: isMobile ? 4 : 6,symbol:'circle',line:{color:'#fff',width:1}},hovertemplate:'<b>Hombres</b><br>Año:%{x}<br>Ingreso:$%{y:,}<extra></extra>'},
+                    {x:YEARS,y:MUJERES,name:'Mujeres',mode:'lines+markers',line:{color:'#E3120B',width: isMobile ? 2.5 : 3},marker:{size: isMobile ? 4 : 6,symbol:'diamond',line:{color:'#fff',width:1}},hovertemplate:'<b>Mujeres</b><br>Año:%{x}<br>Ingreso:$%{y:,}<extra></extra>'}
+                ];
+                const layout = economistLayout('Evolución del Ingreso Promedio','Valores nominales (CLP)');
+                layout.yaxis={title:'Ingreso (CLP)', tickprefix:'$', separatethousands:true, gridcolor:'#ECF0F1', titlefont:{size: isMobile ? 11 : 14}, tickfont:{size: isMobile ? 9 : 12}};
+                layout.xaxis={title:'Año', tickvals:YEARS, titlefont:{size: isMobile ? 11 : 14}, tickfont:{size: isMobile ? 9 : 12}};
+                Plotly.newPlot('chart-evolucion', traces, layout, {responsive:true, useResizeHandler:true, displayModeBar:false});
+            }
+
+            function renderBrecha(){
+                const isMobile = window.innerWidth <= 768;
+                const brecha = HOMBRES.map((h,i)=> ((h - MUJERES[i]) / MUJERES[i]) * 100);
+                const min = Math.min(...brecha), max = Math.max(...brecha);
+                const colors = brecha.map(v=>{ const n=(v-min)/(max-min||1); if(n<=0.25) return '#85C1E9'; if(n<=0.5) return '#5DADE2'; if(n<=0.75) return '#3498DB'; return '#2E86C1';});
+                const trace={x:YEARS,y:brecha,type:'bar',marker:{color:colors,line:{color:'#34495E',width:0.5}},hovertemplate:'Año:%{x}<br>Brecha:%{y:.1f}%<extra></extra>',name:'Brecha (%)'};
+                const layout = economistLayout('Brecha Salarial de Género','(Ingreso hombres - mujeres)/mujeres');
+                layout.yaxis={title:'Brecha (%)',ticksuffix:'%',gridcolor:'#ECF0F1', titlefont:{size: isMobile ? 11 : 14}, tickfont:{size: isMobile ? 9 : 12}};
+                layout.xaxis={title:'Año',tickvals:YEARS, titlefont:{size: isMobile ? 11 : 14}, tickfont:{size: isMobile ? 9 : 12}};
+                layout.showlegend=false;
+                
+                // Adaptar altura según dispositivo
+                const container = document.getElementById('chart-brecha');
+                const containerWidth = container.offsetParent ? container.offsetParent.clientWidth : window.innerWidth * 0.9;
+                layout.width = containerWidth - (isMobile ? 20 : 40);
+                layout.height = isMobile ? 350 : 500;
+                
+                Plotly.newPlot('chart-brecha',[trace],layout,{responsive:true, useResizeHandler:true, displayModeBar:false});
+            }
+
+            function renderComparacion(){
+                const isMobile = window.innerWidth <= 768;
+                const years = YEARS.filter(y=>![2024,2026].includes(y));
+                const idxMap = years.map(y=>YEARS.indexOf(y));
+                const hombres = idxMap.map(i=>HOMBRES[i]);
+                const mujeres = idxMap.map(i=>MUJERES[i]);
+                const traces=[
+                    {x:years,y:hombres,name:'Hombres',mode:'lines+markers',line:{color:'#003B5C',width: isMobile ? 2.5 : 3},marker:{size: isMobile ? 5 : 7,line:{color:'#fff',width:1}},hovertemplate:'<b>Hombres</b><br>Año:%{x}<br>$%{y:,}<extra></extra>'},
+                    {x:years,y:mujeres,name:'Mujeres',mode:'lines+markers',line:{color:'#E3120B',width: isMobile ? 2.5 : 3},marker:{size: isMobile ? 5 : 7,line:{color:'#fff',width:1}},hovertemplate:'<b>Mujeres</b><br>Año:%{x}<br>$%{y:,}<extra></extra>'}
+                ];
+                const layout = economistLayout('Comparación por Género','Ingresos Hombres vs Mujeres (sin 2024 / 2026)');
+                layout.yaxis={title:'Ingreso (CLP)', tickprefix:'$', gridcolor:'#ECF0F1', titlefont:{size: isMobile ? 11 : 14}, tickfont:{size: isMobile ? 9 : 12}};
+                layout.xaxis={title:'Año', tickvals:years, titlefont:{size: isMobile ? 11 : 14}, tickfont:{size: isMobile ? 9 : 12}};
+                
+                // Adaptar altura según dispositivo
+                const container = document.getElementById('chart-comparacion');
+                const containerWidth = container.offsetParent ? container.offsetParent.clientWidth : window.innerWidth * 0.9;
+                layout.width = containerWidth - (isMobile ? 20 : 40);
+                layout.height = isMobile ? 350 : 500;
+                
+                Plotly.newPlot('chart-comparacion', traces, layout, {responsive:true, useResizeHandler:true, displayModeBar:false});
+            }
+
+            function renderAnosClave(){
+                const isMobile = window.innerWidth <= 768;
+                const anosClave=[2010,2015,2022].filter(y=>YEARS.includes(y));
+                const hombres=anosClave.map(y=>HOMBRES[YEARS.indexOf(y)]);
+                const mujeres=anosClave.map(y=>MUJERES[YEARS.indexOf(y)]);
+                const ambos=anosClave.map(y=>AMBOS[YEARS.indexOf(y)]);
+                const colors={'Ambos sexos':'#FFD700','Hombres':'#003B5C','Mujeres':'#E3120B'};
+                const data=[
+                    {name:'Ambos sexos',x:anosClave,y:ambos,type:'bar',marker:{color:colors['Ambos sexos']},hovertemplate:'Año:%{x}<br>$%{y:,}<extra></extra>'},
+                    {name:'Hombres',x:anosClave,y:hombres,type:'bar',marker:{color:colors['Hombres']},hovertemplate:'Año:%{x}<br>$%{y:,}<extra></extra>'},
+                    {name:'Mujeres',x:anosClave,y:mujeres,type:'bar',marker:{color:colors['Mujeres']},hovertemplate:'Año:%{x}<br>$%{y:,}<extra></extra>'}
+                ];
+                const layout = economistLayout('Años Clave','Comparación puntual');
+                layout.barmode='group';
+                layout.yaxis={title:'Ingreso (CLP)',tickprefix:'$',gridcolor:'#ECF0F1', titlefont:{size: isMobile ? 11 : 14}, tickfont:{size: isMobile ? 9 : 12}};
+                layout.xaxis={title:'Año',tickvals:anosClave, titlefont:{size: isMobile ? 11 : 14}, tickfont:{size: isMobile ? 9 : 12}};
+                
+                // Adaptar altura según dispositivo
+                const container = document.getElementById('chart-anos');
+                const containerWidth = container.offsetParent ? container.offsetParent.clientWidth : window.innerWidth * 0.9;
+                layout.width = containerWidth - (isMobile ? 20 : 40);
+                layout.height = isMobile ? 350 : 500;
+                
+                Plotly.newPlot('chart-anos', data, layout, {responsive:true, useResizeHandler:true, displayModeBar:false});
+            }
+
+            document.addEventListener('DOMContentLoaded',()=>{
+                renderEvolucion();
+                renderBrecha();
+                renderComparacion();
+                renderAnosClave();
+            });
+
+            // Re-renderizar gráficos al cambiar orientación/tamaño de pantalla
+            window.addEventListener('resize', () => {
+                clearTimeout(window.resizeTimeout);
+                window.resizeTimeout = setTimeout(() => {
+                    renderEvolucion();
+                    renderBrecha();
+                    renderComparacion();
+                    renderAnosClave();
+                }, 250);
+            });
+        </script>
+</body>
+</html>
